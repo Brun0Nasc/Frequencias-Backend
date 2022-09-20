@@ -1,4 +1,4 @@
-module frequencias-backend
+module github.com/Brun0Nasc/Frequencias-Backend
 
 go 1.18
 
