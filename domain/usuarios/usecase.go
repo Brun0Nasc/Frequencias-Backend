@@ -15,7 +15,7 @@ func NovoUsuario(req *modelApresentacao.ReqUsuario) (err error) {
 
 	err = usuariosRepo.NovoUsuario(req)
 	if err != nil{
-		return fmt.Errorf("user not added \nerr:"+err.Error())
+		return fmt.Errorf("user not added // "+err.Error())
 	}
 
 	return
