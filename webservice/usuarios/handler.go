@@ -54,3 +54,22 @@ func listarUsuarios(c *gin.Context) {
 
 	c.JSON(200, res)
 }
+
+func inativarUsuario(c *gin.Context) {
+	fmt.Println("Tentando inativar usuario")
+	id := c.Param("id")
+
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(404, gin.H{"err":err.Error()})
+		return
+	}
+
+	err = usuarios.InativarUsuario(intId)
+	if err != nil {
+		c.JSON(400, gin.H{"err":err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message":"Cadastro inativado com sucesso"})
+}

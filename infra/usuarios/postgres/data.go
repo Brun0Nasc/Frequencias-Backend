@@ -68,3 +68,15 @@ func (postgres *DBUsuarios) ListarUsuarios(order int) ([]modelApresentacao.ReqUs
 	fmt.Println("Listagem de usuários deu certo")
 	return res, nil
 }
+
+func (postgres *DBUsuarios) InativarUsuario(id int) error {
+	sqlStatement := `UPDATE usuarios SET tipo = 0 WHERE id = $1`
+
+	_, err := postgres.DB.Exec(sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Inativar usuário deu certo")
+	return nil
+}
