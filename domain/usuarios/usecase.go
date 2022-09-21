@@ -15,7 +15,20 @@ func NovoUsuario(req *modelApresentacao.ReqUsuario) (err error) {
 
 	err = usuariosRepo.NovoUsuario(req)
 	if err != nil{
-		return fmt.Errorf("user not added // "+err.Error())
+		return fmt.Errorf("usuario nao adicionado // "+err.Error())
+	}
+
+	return
+}
+
+func ListarUsuarios(order int) (res []modelApresentacao.ReqUsuario, err error) {
+	db := database.Conectar()
+	defer db.Close()
+	usuariosRepo := usuarios.NovoRepo(db)
+
+	res, err = usuariosRepo.ListarUsuarios(order)
+	if err != nil {
+		return nil, fmt.Errorf("usuarios nao listados // "+err.Error())
 	}
 
 	return

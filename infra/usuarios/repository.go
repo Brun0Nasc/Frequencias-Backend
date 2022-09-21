@@ -25,3 +25,7 @@ func (r *repositorio) NovoUsuario(req *modelApresentacao.ReqUsuario) error {
 		Senha: req.Senha,
 	})
 }
+
+func (r *repositorio) ListarUsuarios(order int) ([]modelApresentacao.ReqUsuario, error) {
+	return r.Data.ListarUsuarios(order)
+}
