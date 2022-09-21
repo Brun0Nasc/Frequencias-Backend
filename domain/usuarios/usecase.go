@@ -33,3 +33,16 @@ func ListarUsuarios(order int) (res []modelApresentacao.ReqUsuario, err error) {
 
 	return
 }
+
+func InativarUsuario(id int) (err error) {
+	db := database.Conectar()
+	defer db.Close()
+	usuariosRepo := usuarios.NovoRepo(db)
+
+	err = usuariosRepo.InativarUsuario(id)
+	if err != nil {
+		return fmt.Errorf("usuario nao inativado // "+err.Error())
+	}
+
+	return
+}
