@@ -22,7 +22,7 @@ func (r *repositorio) NovoUsuario(req *modelApresentacao.ReqUsuario) error {
 		Tipo:  req.Tipo,
 		Nome:  req.Nome,
 		Email: req.Email,
-		Senha: req.Senha,
+		Senha: &req.Senha,
 	})
 }
 
