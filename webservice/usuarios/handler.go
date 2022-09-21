@@ -2,6 +2,7 @@ package usuarios
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
@@ -33,4 +34,42 @@ func novoUsuario(c *gin.Context){
 	}
 
 	c.JSON(201, gin.H{"message":"Usuário adicionado com sucesso!"})
+}
+
+func listarUsuarios(c *gin.Context) {
+	fmt.Println("Tentando listar usuarios")
+	order := c.Param("order")
+
+	intOrder, err := strconv.Atoi(order)
+	if err != nil {
+		c.JSON(404, gin.H{"message":"Parâmetro passado de forma incorreta", "err":err.Error()})
+		return
+	}
+
+	res, err := usuarios.ListarUsuarios(intOrder)
+	if err != nil {
+		c.JSON(404, gin.H{"err":err.Error()})
+		return
+	}
+
+	c.JSON(200, res)
+}
+
+func inativarUsuario(c *gin.Context) {
+	fmt.Println("Tentando inativar usuario")
+	id := c.Param("id")
+
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(404, gin.H{"err":err.Error()})
+		return
+	}
+
+	err = usuarios.InativarUsuario(intId)
+	if err != nil {
+		c.JSON(400, gin.H{"err":err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message":"Cadastro inativado com sucesso"})
 }
