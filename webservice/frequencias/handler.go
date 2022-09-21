@@ -28,7 +28,3 @@ func NovaFrequencia(c *gin.Context) {
 	}
 	c.JSON(201, gin.H{"message": "Frequencia adicionada com sucesso!"})
 }
-
-func listaFrequenciaTeste(c *gin.Context) {
-	c.JSON(http.StatusOK, nil)
-}

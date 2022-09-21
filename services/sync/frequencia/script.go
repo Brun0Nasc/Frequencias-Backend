@@ -6,9 +6,12 @@ import (
 )
 
 const (
-	tempoExecucao      = time.Second * 10
-	tipoRotinaMultipla = "[rotina_de_multipla_execucao]"
-	tipoRotinaUnica    = "[rotina_de_execucao_unica]"
+	// tempoExecucao é a constante responsável por definir o intervalo de tempo de execução da rotina
+	tempoExecucao = time.Second * 10
+	// tipoRotinaMultipla é a constante que identifica a rotina como tipo de execução múltipla
+	tipoRotinaMultipla string = "[rotina_de_multipla_execucao]"
+	// tipoRotinaUnica é a constante que identifica a rotina como tipo de execução única
+	tipoRotinaUnica string = "[rotina_de_execucao_unica]"
 )
 
 // GerarListaFrequencia é responsável por criar o tick de execução da rotina de gerar frequências
@@ -28,7 +31,7 @@ func GerarListaFrequencia() (erro error) {
 	//! mas assim que for implementada a regra de negócio é de extrema importância
 	//! que os erros sejam tratados da melhor forma possível e retornados para a main
 
-	//! O erro não deve ser estourado em caso de falha, pois o mesmo interromperia a execução da rotina principal (a funcção main)
+	//! O erro não deve ser estourado em caso de falha, pois o mesmo interromperia a execução da rotina principal (a função main)
 	//! Tendo isso em vista o erro deve apenas ser tratado e loggado
 	return
 }
@@ -37,9 +40,7 @@ func GerarListaFrequencia() (erro error) {
 func GerarListaFrequencia2() (erro error) {
 	// * Com essa implementação a execução da goroutine é realizada
 	// * apenas uma vez dentro do horário especificado [23h - 02h]
-	horarioValido := validarHorarioExecucao(23, 2)
-
-	if horarioValido {
+	if horarioValido := validarHorarioExecucao(23, 2); horarioValido {
 		gerarListaFrequencia(tipoRotinaUnica)
 	}
 
