@@ -17,7 +17,7 @@ func main() {
 
 	us := r.Group("usuarios")
 	fr := r.Group("frequencias", middlewares.Auth())
-	lo := r.Group("login")
+	lo := r.Group("login", middlewares.Auth())
 
 	frequencias.Router(fr)
 	usuarios.Router(us)
