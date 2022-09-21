@@ -7,7 +7,6 @@ import (
 
 const (
 	tempoExecucao      = time.Second * 10
-	horarioExecucao    = 12
 	tipoRotinaMultipla = "[rotina_de_multipla_execucao]"
 	tipoRotinaUnica    = "[rotina_de_execucao_unica]"
 )
@@ -57,9 +56,9 @@ func gerarListaFrequencia(tipoRotina string) (erro error) {
 func validarHorarioExecucao(inicio, fim int) bool {
 	var agora = time.Now()
 
-	if agora.Hour() > inicio && agora.Hour() < fim {
-		return true
+	if inicio <= fim {
+		return (agora.Hour() >= inicio && agora.Hour() <= fim)
 	}
 
-	return false
+	return (agora.Hour() >= inicio || agora.Hour() <= fim)
 }
