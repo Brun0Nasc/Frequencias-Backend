@@ -22,3 +22,7 @@ func (r *repositorio) NovaFrequencia(req *modelApresentacao.ReqFrequencia) error
 		UsuarioID: req.UsuarioID,
 	})
 }
+
+func (r *repositorio) ListarFrequenciasUsuario(idUser int) ([]modelApresentacao.ReqFrequencia, error) {
+	return r.Data.ListarFrequenciasUsuario(idUser)
+}

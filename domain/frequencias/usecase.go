@@ -19,3 +19,15 @@ func NovaFrequencia(req *modelApresentacao.ReqFrequencia) (err error) {
 	}
 	return
 }
+
+func ListarFrequenciasUsuario(idUser int) (req []modelApresentacao.ReqFrequencia, err error) {
+	db := database.Conectar()
+	defer db.Close()
+	frequenciasRepo := frequencias.NovoRepo(db)
+
+	req ,err = frequenciasRepo.ListarFrequenciasUsuario(idUser)
+	if err != nil{
+		return nil, fmt.Errorf("frequencia not list \nerr:"+err.Error())
+	}
+	return
+}

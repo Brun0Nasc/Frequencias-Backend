@@ -3,10 +3,11 @@ package frequencias
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/Brun0Nasc/Frequencias-Backend/domain/frequencias"
 	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/frequencias/model"
 	"github.com/gin-gonic/gin"
-	"github.com/Brun0Nasc/Frequencias-Backend/domain/frequencias"
 )
 
 func NovaFrequencia(c *gin.Context) {
@@ -27,4 +28,20 @@ func NovaFrequencia(c *gin.Context) {
 		return
 	}
 	c.JSON(201, gin.H{"message":"Frequencia adicionada com sucesso!"})
+}
+
+func ListarFrequenciasUsuario(c *gin.Context) {
+	fmt.Println("Tentando buscar as frequencias de um usuário")
+	idUser := c.Param("id")
+	intId, err := strconv.Atoi(idUser)
+	if err != nil {
+		c.JSON(404, gin.H{"err":err.Error()})
+		return
+	}
+	if frequencias, err := frequencias.ListarFrequenciasUsuario(intId); err != nil {
+		c.JSON(404, gin.H{"err":err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, frequencias)
+	}
 }
