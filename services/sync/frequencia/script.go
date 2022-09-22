@@ -40,7 +40,7 @@ func GerarListaFrequencia() (erro error) {
 func GerarListaFrequencia2() (erro error) {
 	// * Com essa implementação a execução da goroutine é realizada
 	// * apenas uma vez dentro do horário especificado [23h - 02h]
-	if horarioValido := validarHorarioExecucao(23, 2); horarioValido {
+	if horarioValido := validarHorarioExecucao(8,10); horarioValido {
 		gerarListaFrequencia(tipoRotinaUnica)
 	}
 
