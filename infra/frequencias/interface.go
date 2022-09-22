@@ -5,5 +5,6 @@ import (
 )
 
 type IFrequencia interface {
-	NovaFrequencia(req *modelApresentacao.ReqFrequencia) error 
+	NovaFrequencia(req *modelApresentacao.ReqFrequencia) error
+	ListarFrequenciasUsuario(idUser int) ([]modelApresentacao.ReqFrequencia, error)
 }
