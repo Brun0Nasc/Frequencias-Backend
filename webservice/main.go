@@ -15,9 +15,9 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	us := r.Group("usuarios")
+	us := r.Group("usuarios", middlewares.Auth())
 	fr := r.Group("frequencias", middlewares.Auth())
-	lo := r.Group("login", middlewares.Auth())
+	lo := r.Group("login")
 
 	frequencias.Router(fr)
 	usuarios.Router(us)
