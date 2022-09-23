@@ -2,7 +2,7 @@ package usuarios
 
 import "time"
 
-type ReqUsuario struct {
+type Usuario struct {
 	ID        *int       `json:"id"`
 	Tipo      *int       `json:"tipo"`
 	Nome      *string    `json:"nome"`
@@ -10,4 +10,8 @@ type ReqUsuario struct {
 	Senha     string     `json:"senha"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
+}
+
+type ListaUsuarios struct {
+	Dados []Usuario `json:"data"` 
 }

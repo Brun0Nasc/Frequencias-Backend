@@ -9,8 +9,8 @@ import (
 	"github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios"
 )
 
-func pegaJSON(c *gin.Context) *modelApresentacao.ReqUsuario {
-	var req = modelApresentacao.ReqUsuario{}
+func pegaJSON(c *gin.Context) *modelApresentacao.Usuario {
+	var req = modelApresentacao.Usuario{}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
 			"message":"Could not create. Parameters were not passed correctly",

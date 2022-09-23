@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 
+	sq "github.com/Masterminds/squirrel"
+
 	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
 	modelData "github.com/Brun0Nasc/Frequencias-Backend/infra/usuarios/model"
 )
 
-var usuario = modelApresentacao.ReqUsuario{}
+var usuario = modelApresentacao.Usuario{}
 
 type DBUsuarios struct {
 	DB *sql.DB
@@ -28,45 +30,128 @@ func (postgres *DBUsuarios) NovoUsuario(req *modelData.Usuario) error {
 	return nil
 }
 
-func (postgres *DBUsuarios) ListarUsuarios(order int) ([]modelApresentacao.ReqUsuario, error) {
-	var sqlStatement string
+func (pg *DBUsuarios) ListarUsuarios(order int) (res *modelApresentacao.ListaUsuarios, err error) {
+	var sqlStmt string
+	var sqlValues []interface{}
 
 	switch order {
 	case 1:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY UPPER(nome);` // listar usuários ativos em ordem A_Z
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.NotEq{
+			"US.tipo":0,
+		}).
+		OrderBy("UPPER(US.nome)").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY UPPER(nome);` // listar usuários ativos em ordem A_Z
 	case 2:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY UPPER(nome) DESC;` // listar usuários ativos em ordem Z_A
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.NotEq{
+			"US.tipo":0,
+		}).
+		OrderBy("UPPER(US.nome) DESC").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY UPPER(nome) DESC;` // listar usuários ativos em ordem Z_A
 	case 3:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY UPPER(nome);` // listar usuários inativos em ordem A_Z
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.Eq{
+			"US.tipo":0,
+		}).
+		OrderBy("UPPER(US.nome)").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY UPPER(nome);` // listar usuários inativos em ordem A_Z
 	case 4:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY UPPER(nome) DESC;` // listar usuários inativos em ordem Z_A
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.Eq{
+			"US.tipo":0,
+		}).
+		OrderBy("UPPER(US.nome) DESC").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY UPPER(nome) DESC;` // listar usuários inativos em ordem Z_A
 	case 5:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY created_at;` // listar usuários ativos em orderm de criação crescente
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.NotEq{
+			"US.tipo":0,
+		}).
+		OrderBy("US.created_at").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY created_at;` // listar usuários ativos em orderm de criação crescente
 	case 6:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY created_at DESC;` // listar usuários ativos em orderm de criação decrescente
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.NotEq{
+			"US.tipo":0,
+		}).
+		OrderBy("US.created_at DESC").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY created_at DESC;` // listar usuários ativos em orderm de criação decrescente
 	case 7:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY created_at;` // listar usuários inativos em orderm de criação crescente
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.Eq{
+			"US.tipo":0,
+		}).
+		OrderBy("US.created_at").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY created_at;` // listar usuários inativos em orderm de criação crescente
 	case 8:
-		sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY created_at DESC;` // listar usuários inativos em orderm de criação decrescente
+		sqlStmt, sqlValues, err = sq.
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.Eq{
+			"US.tipo":0,
+		}).
+		OrderBy("US.created_at DESC").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY created_at DESC;` // listar usuários inativos em orderm de criação decrescente
 	default:
 		return nil, fmt.Errorf("Order " + fmt.Sprint(order) + " inexistente.")
 	}
 
-	rows, err := postgres.DB.Query(sqlStatement)
 	if err != nil {
 		return nil, err
 	}
 
-	var res = []modelApresentacao.ReqUsuario{}
+	rows, err := pg.DB.Query(sqlStmt, sqlValues...)
+	if err != nil {
+		return nil, err
+	}
+
+	res = &modelApresentacao.ListaUsuarios{
+		Dados: make([]modelApresentacao.Usuario, 0),
+	}
 
 	for rows.Next() {
 		if err := rows.Scan(&usuario.ID, &usuario.Tipo, &usuario.Nome, &usuario.Email, &usuario.Senha, &usuario.CreatedAt, &usuario.UpdatedAt); err != nil {
+			if err == sql.ErrNoRows{
+				return res, nil
+			}
 			return nil, err
 		}
-		res = append(res, usuario)
+		res.Dados = append(res.Dados, usuario)
 	}
+
 	fmt.Println("Listagem de usuários deu certo")
-	return res, nil
+	return
 }
 
 func (postgres *DBUsuarios) InativarUsuario(id int) error {

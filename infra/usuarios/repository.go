@@ -17,7 +17,7 @@ func novoRepo(novoDB *sql.DB) *repositorio {
 	}
 }
 
-func (r *repositorio) NovoUsuario(req *modelApresentacao.ReqUsuario) error {
+func (r *repositorio) NovoUsuario(req *modelApresentacao.Usuario) error {
 	return r.Data.NovoUsuario(&modelData.Usuario{
 		Tipo:  req.Tipo,
 		Nome:  req.Nome,
@@ -26,7 +26,7 @@ func (r *repositorio) NovoUsuario(req *modelApresentacao.ReqUsuario) error {
 	})
 }
 
-func (r *repositorio) ListarUsuarios(order int) ([]modelApresentacao.ReqUsuario, error) {
+func (r *repositorio) ListarUsuarios(order int) (*modelApresentacao.ListaUsuarios, error) {
 	return r.Data.ListarUsuarios(order)
 }
 

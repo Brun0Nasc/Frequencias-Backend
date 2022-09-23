@@ -9,7 +9,7 @@ import (
 	"github.com/Brun0Nasc/Frequencias-Backend/config/services"
 )
 
-func NovoUsuario(req *modelApresentacao.ReqUsuario) (err error) {
+func NovoUsuario(req *modelApresentacao.Usuario) (err error) {
 	db := database.Conectar()
 	defer db.Close()
 	usuariosRepo := usuarios.NovoRepo(db)
@@ -23,7 +23,7 @@ func NovoUsuario(req *modelApresentacao.ReqUsuario) (err error) {
 	return
 }
 
-func ListarUsuarios(order int) (res []modelApresentacao.ReqUsuario, err error) {
+func ListarUsuarios(order int) (res *modelApresentacao.ListaUsuarios, err error) {
 	db := database.Conectar()
 	defer db.Close()
 	usuariosRepo := usuarios.NovoRepo(db)
