@@ -34,13 +34,12 @@ func NovaFrequencia(c *gin.Context) {
 func ListarFrequenciasUsuario(c *gin.Context) {
 	fmt.Println("Tentando buscar as frequencias de um usuário")
 	idUser, err := strconv.Atoi(c.Param("id"))
-
 	if err != nil {
 		c.JSON(404, gin.H{"err": err.Error()})
 		return
 	}
 
-	frequencias, err := frequencias.ListarFrequenciasUsuario(utils.GetInt64Pointer(idUser))
+	frequencias, err := frequencias.ListarFrequenciasUsuario(utils.GetInt64Pointer(int64(idUser)))
 	if err != nil {
 		c.JSON(404, gin.H{"err": err.Error()})
 		return

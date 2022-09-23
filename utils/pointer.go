@@ -1,6 +1,5 @@
 package utils
 
-func GetInt64Pointer(value int) *int64 {
-	v := int64(value)
-	return &v
+func GetInt64Pointer(value int64) *int64 {
+	return &value
 }
