@@ -31,7 +31,7 @@ func Login(c *gin.Context) {
 
 	if user == nil && err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid Credentials: ",
+			"error": "Invalid Credentials",
 		})
 		return
 	}
