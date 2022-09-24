@@ -32,7 +32,10 @@ func (postgres *DBUsuarios) NovoUsuario(req *modelData.Usuario) error {
 }
 
 func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApresentacao.ListaUsuarios, err error) {
-	var ordem, ordenador string
+	var (
+		ordem, ordenador string
+		removido         bool
+	)
 
 	if params.TemFiltro("order") {
 		ordem = params.Filters["order"][0]
@@ -42,16 +45,16 @@ func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApr
 		ordenador = params.Filters["orderBy"][0]
 	}
 
+	_, removido = params.TemFiltroBool("removido")
+
 	sqlStmt, sqlValues, err := sq.
-	Select("US.*").
-	From("usuarios US").
-	Where(sq.NotEq{
-		"US.tipo":0, // * Listando usuários com tipo diferente de 0, vai listar os usuários ativos
-	}).OrderBy(ordenador + " " + ordem).
-	PlaceholderFormat(sq.Dollar).
-	ToSql()
-		
-	// ! Falta ainda listar os usuários inativos, ou seja, com o tipo igual a zero (Segunda eu implemento essa e mudo o handler)
+		Select("US.*").
+		From("usuarios US").
+		Where(sq.Eq{
+			"(US.removed_at IS NULL)": removido,
+		}).OrderBy(ordenador + " " + ordem).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 
 	if err != nil {
 		return nil, err
@@ -68,7 +71,7 @@ func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApr
 
 	for rows.Next() {
 		if err := rows.Scan(&usuario.ID, &usuario.Tipo, &usuario.Nome, &usuario.Email, &usuario.Senha, &usuario.CreatedAt, &usuario.UpdatedAt); err != nil {
-			if err == sql.ErrNoRows{
+			if err == sql.ErrNoRows {
 				return res, nil
 			}
 			return nil, err
