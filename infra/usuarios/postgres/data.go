@@ -8,6 +8,7 @@ import (
 
 	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
 	modelData "github.com/Brun0Nasc/Frequencias-Backend/infra/usuarios/model"
+	"github.com/Brun0Nasc/Frequencias-Backend/utils"
 )
 
 var usuario = modelApresentacao.Usuario{}
@@ -30,102 +31,27 @@ func (postgres *DBUsuarios) NovoUsuario(req *modelData.Usuario) error {
 	return nil
 }
 
-func (pg *DBUsuarios) ListarUsuarios(order int) (res *modelApresentacao.ListaUsuarios, err error) {
-	var sqlStmt string
-	var sqlValues []interface{}
+func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApresentacao.ListaUsuarios, err error) {
+	var ordem, ordenador string
 
-	switch order {
-	case 1:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.NotEq{
-			"US.tipo":0,
-		}).
-		OrderBy("UPPER(US.nome)").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY UPPER(nome);` // listar usuários ativos em ordem A_Z
-	case 2:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.NotEq{
-			"US.tipo":0,
-		}).
-		OrderBy("UPPER(US.nome) DESC").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY UPPER(nome) DESC;` // listar usuários ativos em ordem Z_A
-	case 3:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.Eq{
-			"US.tipo":0,
-		}).
-		OrderBy("UPPER(US.nome)").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY UPPER(nome);` // listar usuários inativos em ordem A_Z
-	case 4:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.Eq{
-			"US.tipo":0,
-		}).
-		OrderBy("UPPER(US.nome) DESC").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY UPPER(nome) DESC;` // listar usuários inativos em ordem Z_A
-	case 5:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.NotEq{
-			"US.tipo":0,
-		}).
-		OrderBy("US.created_at").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY created_at;` // listar usuários ativos em orderm de criação crescente
-	case 6:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.NotEq{
-			"US.tipo":0,
-		}).
-		OrderBy("US.created_at DESC").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo != 0 ORDER BY created_at DESC;` // listar usuários ativos em orderm de criação decrescente
-	case 7:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.Eq{
-			"US.tipo":0,
-		}).
-		OrderBy("US.created_at").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY created_at;` // listar usuários inativos em orderm de criação crescente
-	case 8:
-		sqlStmt, sqlValues, err = sq.
-		Select("US.*").
-		From("usuarios US").
-		Where(sq.Eq{
-			"US.tipo":0,
-		}).
-		OrderBy("US.created_at DESC").
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-		//sqlStatement = `SELECT * FROM usuarios WHERE tipo = 0 ORDER BY created_at DESC;` // listar usuários inativos em orderm de criação decrescente
-	default:
-		return nil, fmt.Errorf("Order " + fmt.Sprint(order) + " inexistente.")
+	if params.TemFiltro("order") {
+		ordem = params.Filters["order"][0]
 	}
+
+	if params.TemFiltro("orderBy") {
+		ordenador = params.Filters["orderBy"][0]
+	}
+
+	sqlStmt, sqlValues, err := sq.
+	Select("US.*").
+	From("usuarios US").
+	Where(sq.NotEq{
+		"US.tipo":0, // * Listando usuários com tipo diferente de 0, vai listar os usuários ativos
+	}).OrderBy(ordenador + " " + ordem).
+	PlaceholderFormat(sq.Dollar).
+	ToSql()
+		
+	// ! Falta ainda listar os usuários inativos, ou seja, com o tipo igual a zero (Segunda eu implemento essa e mudo o handler)
 
 	if err != nil {
 		return nil, err
