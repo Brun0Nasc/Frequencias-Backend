@@ -10,18 +10,17 @@ import (
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/frequencias"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/login"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/usuarios"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	port := os.Getenv("PORT")
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(middlewares.CORSMiddleware())
 
-	usuarios.Router(r.Group("usuarios"))
-	login.Router(r.Group("login", middlewares.Auth()))
 	frequencias.Router(r.Group("frequencias", middlewares.Auth()))
+	usuarios.Router(r.Group("usuarios", middlewares.Auth()))
+	login.Router(r.Group("login")) //! nada de middlewares aqui
 
 	// Inicializando rotinas
 	if erro := sync.IniciarRotinas(); erro != nil {

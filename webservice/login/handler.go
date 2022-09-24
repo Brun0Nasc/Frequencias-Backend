@@ -2,12 +2,11 @@ package login
 
 import (
 	"github.com/Brun0Nasc/Frequencias-Backend/config/services"
-	
+
 	"net/http"
 
-
-	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/login/model"
 	"github.com/Brun0Nasc/Frequencias-Backend/domain/login"
+	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/login/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,10 +15,10 @@ func Login(c *gin.Context) {
 	req := modelApresentacao.Login{}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
-			"message":"Could not create. Parameters were not passed correctly",
-			"err":err.Error(),
+			"message": "Could not create. Parameters were not passed correctly",
+			"err":     err.Error(),
 		})
-		return 
+		return
 	}
 
 	user, err := login.LoginUsuario(&req)
@@ -49,5 +48,5 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})
-	
+
 }
