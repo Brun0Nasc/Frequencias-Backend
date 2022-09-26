@@ -25,7 +25,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 
 CREATE TABLE  frequencias (
 	id serial primary key not null,
-	data_atual date default current_date
+	data_atual timestamp default (now())
 );
 
 CREATE TABLE frequencia_usuario (
