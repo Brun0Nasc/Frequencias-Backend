@@ -40,8 +40,18 @@ func GerarListaFrequencia() (erro error) {
 func GerarListaFrequencia2() (erro error) {
 	// * Com essa implementação a execução da goroutine é realizada
 	// * apenas uma vez dentro do horário especificado [23h - 02h]
-	if horarioValido := validarHorarioExecucao(8,10); horarioValido {
+	if horarioValido := validarHorarioExecucao(23, 2); horarioValido {
+		var (
+			agora           = time.Now()
+			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day(), agora.Hour(), agora.Minute(), agora.Second()+10, 0, time.Local)
+		)
+
+		//* Execução da rotina
 		gerarListaFrequencia(tipoRotinaUnica)
+		//* Aguardar a próxima execução da rotina de acordo com o informado na variável proximaExecucao
+		AguardarHorarioExecucao(agora, proximaExecucao)
+		//* Inicializando novamente a rotina após o período de pausa
+		go GerarListaFrequencia2()
 	}
 
 	return
@@ -62,4 +72,9 @@ func validarHorarioExecucao(inicio, fim int) bool {
 	}
 
 	return (agora.Hour() >= inicio || agora.Hour() <= fim)
+}
+
+// AguardarHorarioExecucao é responsável por pausar a execução da rotina até o horário informado
+func AguardarHorarioExecucao(agora, proximaExecucao time.Time) {
+	time.Sleep(proximaExecucao.Sub(agora))
 }
