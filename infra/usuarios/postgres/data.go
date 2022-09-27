@@ -51,7 +51,7 @@ func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApr
 		Select("US.*").
 		From("usuarios US").
 		Where(sq.Eq{
-			"(US.removed_at IS NULL)": removido,
+			"(US.removed_at IS NOT NULL)": removido,
 		}).OrderBy(ordenador + " " + ordem).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
@@ -70,7 +70,7 @@ func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApr
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&usuario.ID, &usuario.Tipo, &usuario.Nome, &usuario.Email, &usuario.Senha, &usuario.CreatedAt, &usuario.UpdatedAt); err != nil {
+		if err := rows.Scan(&usuario.ID, &usuario.Tipo, &usuario.Nome, &usuario.Email, &usuario.Senha, &usuario.CreatedAt, &usuario.UpdatedAt, &usuario.RemovedAt); err != nil {
 			if err == sql.ErrNoRows {
 				return res, nil
 			}
@@ -84,7 +84,7 @@ func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApr
 }
 
 func (postgres *DBUsuarios) InativarUsuario(id int) error {
-	sqlStatement := `UPDATE usuarios SET tipo = 0 WHERE id = $1`
+	sqlStatement := `UPDATE usuarios SET removed_at = now() WHERE id = $1`
 
 	_, err := postgres.DB.Exec(sqlStatement, id)
 	if err != nil {
