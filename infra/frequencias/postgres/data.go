@@ -5,25 +5,22 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-
-	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/frequencias/model"
-	modelData "github.com/Brun0Nasc/Frequencias-Backend/infra/frequencias/model"
 )
 
 type DBFrequencias struct {
 	DB *sql.DB
 }
 
-func (pg *DBFrequencias) NovaFrequencia(req *modelData.Frequencia) (err error) {
-	sqlStatement, sqlValues, err := sq.
+func (pg *DBFrequencias) NovaFrequencia() (err error) {
+	sqlStatement, _, err := sq.
 		Insert("frequencias").
-		Columns("usuario_id").
-		Values(req.UsuarioID).ToSql()
+		Columns("data_atual").
+		Values("current_date").ToSql()
 	if err != nil {
 		return
 	}
 
-	_, err = pg.DB.Exec(sqlStatement, sqlValues...)
+	_, err = pg.DB.Exec(sqlStatement)
 	if err != nil {
 		return err
 	}
@@ -32,38 +29,30 @@ func (pg *DBFrequencias) NovaFrequencia(req *modelData.Frequencia) (err error) {
 	return
 }
 
-func (pg *DBFrequencias) ListarFrequenciasUsuario(idUser *int64) (res *modelApresentacao.ListaFrequencias, err error) {
-	var frequencia = modelApresentacao.Frequencia{}
-
-	sqlStatement, sqlValues, err := sq.
-		Select("FR.*").
+func (pg *DBFrequencias) PegarFrequenciaMaisRecente() (res *int, err error) {
+	sqlStatement, _, err := sq.
+		Select("FR.id").
 		From("frequencias FR").
-		Join("usuarios US ON US.ID = FR.usuario_id").
-		Where(sq.Eq{
-			"US.id": idUser,
-		}).
-		PlaceholderFormat(sq.Dollar).
+		OrderBy("FR.id desc").
+		Limit(1).
 		ToSql()
-
-	row, err := pg.DB.Query(sqlStatement, sqlValues...)
+	
 	if err != nil {
+		fmt.Println(err)
+	}
+
+	row := pg.DB.QueryRow(sqlStatement)
+
+
+	if err := row.Scan(&res); err != nil { // ! Erro: destination pointer is nil
+		if err == sql.ErrNoRows {
+			return res, nil
+		}
+		fmt.Println(err)
 		return nil, err
 	}
 
-	res = &modelApresentacao.ListaFrequencias{
-		Dados: make([]modelApresentacao.Frequencia, 0),
-	}
 
-	for row.Next() {
-		if err := row.Scan(&frequencia.ID, &frequencia.UsuarioID, &frequencia.CreatedAt, &frequencia.Nome); err != nil {
-			if err == sql.ErrNoRows {
-				return res, nil
-			}
-			return nil, err
-		}
-
-		res.Dados = append(res.Dados, frequencia)
-	}
-
+	fmt.Println("Aqui Funciona 3 ")
 	return
 }

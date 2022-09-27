@@ -4,9 +4,9 @@ import (
 	"os"
 
 	"github.com/Brun0Nasc/Frequencias-Backend/config/server/middlewares"
-	"github.com/Brun0Nasc/Frequencias-Backend/webservice/frequencias"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/login"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/usuarios"
+	"github.com/Brun0Nasc/Frequencias-Backend/webservice/frequencia_usuario"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,8 +15,8 @@ func main() {
 	r := gin.Default()
 	r.Use(middlewares.CORSMiddleware())
 
-	frequencias.Router(r.Group("frequencias", middlewares.Auth()))
-	usuarios.Router(r.Group("usuarios", middlewares.Auth()))
+	usuarios.Router(r.Group("usuarios"))
+	frequencia_usuario.Router(r.Group("frequencia"))
 	login.Router(r.Group("login")) //! nada de middlewares aqui
 
 	r.Run(":" + port)

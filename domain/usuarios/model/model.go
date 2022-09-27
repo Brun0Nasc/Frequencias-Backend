@@ -10,6 +10,7 @@ type Usuario struct {
 	Senha     string     `json:"senha"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
+	RemovedAt *time.Time `json:"removed_at"`
 }
 
 type ListaUsuarios struct {
