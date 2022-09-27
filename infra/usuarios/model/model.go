@@ -10,4 +10,5 @@ type Usuario struct {
 	Senha     *string
 	CreatedAt *time.Time
 	UpdatedAt *time.Time
+	RemovedAt *time.Time
 }
