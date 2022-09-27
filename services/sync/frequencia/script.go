@@ -43,7 +43,7 @@ func GerarListaFrequencia2() (erro error) {
 	if horarioValido := validarHorarioExecucao(23, 2); horarioValido {
 		var (
 			agora           = time.Now()
-			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day(), agora.Hour(), agora.Minute(), agora.Second()+10, 0, time.Local)
+			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day()+1, 0, 0, 0, 0, time.Local)
 		)
 
 		//* Execução da rotina
