@@ -4,20 +4,20 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	//"os"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
-var host string = "localhost"
-var user string = "root"
-var password string = "root"
-var dbname string = "db_frequencia"
+var host string = os.Getenv("DB_HOST")
+var user string = os.Getenv("DB_USER")
+var password string = os.Getenv("DB_PASSWORD")
+var dbname string = os.Getenv("DB_NAME")
 const port = 5432
 
 func Conectar() *sql.DB {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s " +
-		"password=%s dbname=%s sslmode=disable",
+		"password=%s dbname=%s sslmode=require",
 		host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", psqlInfo)
