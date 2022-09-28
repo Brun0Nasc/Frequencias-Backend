@@ -7,5 +7,5 @@ import(
 
 type IFrequenciaUsuario interface{
 	NovaFrequenciaUsuario(req *modelApresentacao.ReqFrequenciaUsuario) error
-	ListarFrequenciasData(params *utils.RequestParams) (*modelApresentacao.ListaUsuarioFrequencia, error)
+	ListaFrequenciasData(params *utils.RequestParams) (*modelApresentacao.ListaUsuarioFrequencia, error)
 }

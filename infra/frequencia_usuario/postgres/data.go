@@ -3,7 +3,6 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"time"
 
 	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/frequencia_usuario/model"
 	modelData "github.com/Brun0Nasc/Frequencias-Backend/infra/frequencia_usuario/model"
@@ -35,6 +34,8 @@ func (pg *DBFrequenciaUsuario) NovaFrequenciaUsuario(req *modelData.FrequenciaUs
 	return
 }
 
+/*
+ !Futura implementação
 func Filtro(consulta *sq.SelectBuilder, params *utils.RequestParams){
 	var data string
 	if params.TemFiltro("data") {
@@ -44,11 +45,12 @@ func Filtro(consulta *sq.SelectBuilder, params *utils.RequestParams){
 		"(FR.data_atual)": data,
 	})
 }
-
+*/
 func (pg *DBFrequenciaUsuario) ListaFrequenciasData(params *utils.RequestParams) (res *modelApresentacao.ListaUsuarioFrequencia, err error) {
 	var (
-		ordem, ordenador string
+		ordem, ordenador, data string
 	)
+	var frequenciaUsuario = modelApresentacao.ResFrequenciaUsuario{}
 
 	if params.TemFiltro("order") {
 		ordem = params.Filters["order"][0]
@@ -58,26 +60,47 @@ func (pg *DBFrequenciaUsuario) ListaFrequenciasData(params *utils.RequestParams)
 		ordenador = params.Filters["orderBy"][0]
 	}
 
-	
+	if params.TemFiltro("data") {
+		data = params.Filters["data"][0]
+	}
 
 	sqlStmt, sqlValues, err := sq.
 		Select("FU.id, FU.usuario_id, US.nome, FU.frequencia_id, FR.data_atual data_frequencia, FU.entrada, FU.saida").
 		From("frequencia_usuario FU").
 		Join("usuarios US ON US.id=FU.usuario_id").
 		Join("frequencias FR ON FR.id=FU.frequencia_id").
+		Where(sq.Eq{
+			"FR.data_atual":data,
+		}).
 		OrderBy(ordenador + " " + ordem).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	rows, err := pg.DB.Query(sqlStmt, sqlValues...)
 	if err != nil {
-		return
+		return nil, err
 	}
 
+	res = &modelApresentacao.ListaUsuarioFrequencia{
+		Dados: make([]modelApresentacao.ResFrequenciaUsuario, 0),
+	}
+
+	for rows.Next() {
+		if err = rows.Scan(&frequenciaUsuario.ID, &frequenciaUsuario.UsuarioID, &frequenciaUsuario.Nome, &frequenciaUsuario.FrequenciaID,
+		&frequenciaUsuario.DataFrequencia, &frequenciaUsuario.Entrada, &frequenciaUsuario.Saida); err != nil {
+			if err == sql.ErrNoRows {
+				return res, nil
+			}
+			return nil, err
+		}
+		res.Dados = append(res.Dados, frequenciaUsuario)
+	}
+
+	return
 }
 
 /*func (pg *DBFrequencias) ListarFrequenciasUsuario(idUser *int64) (res *modelApresentacao.ListaFrequencias, err error) {
