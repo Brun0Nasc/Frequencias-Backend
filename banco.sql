@@ -15,7 +15,7 @@ CREATE TABLE usuarios(
 	senha text not null,
 	created_at timestamp default (now()),
 	updated_at timestamp default (now()),
-	deleted_at timestamp
+	removed_at timestamp
 );
 
 CREATE TRIGGER set_timestamp
