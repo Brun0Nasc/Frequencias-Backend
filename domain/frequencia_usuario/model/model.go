@@ -21,5 +21,5 @@ type ResFrequenciaUsuario struct {
 }
 
 type ListaUsuarioFrequencia struct {
-	Data []ResFrequenciaUsuario `json:"data"`
+	Dados []ResFrequenciaUsuario `json:"data"`
 }
