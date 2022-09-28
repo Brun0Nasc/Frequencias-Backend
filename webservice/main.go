@@ -15,8 +15,8 @@ func main() {
 	r := gin.Default()
 	r.Use(middlewares.CORSMiddleware())
 
-	usuarios.Router(r.Group("usuarios"))
-	frequencia_usuario.Router(r.Group("frequencia"))
+	usuarios.Router(r.Group("usuarios", middlewares.Auth()))
+	frequencia_usuario.Router(r.Group("frequencia", middlewares.Auth()))
 	login.Router(r.Group("login")) //! nada de middlewares aqui
 
 	r.Run(":" + port)
