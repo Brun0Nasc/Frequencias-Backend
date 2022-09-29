@@ -1,4 +1,4 @@
-# Frequencias-Backend
+# Frequencias-Backend (documentação provisória)
 Link: https://app-ponto-aprendizes.herokuapp.com/
 
 ## BATER PONTO
