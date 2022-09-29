@@ -15,7 +15,7 @@ func (postgres *DBLogin) LoginUsuario(req *modelData.ReqLogin) (*modelApresentac
 	user := modelApresentacao.Login{}
 	row := postgres.DB.QueryRow(sqlStatement, req.Email)
 
-	if err := row.Scan(&user.ID,&user.Tipo, &user.Nome, &user.Email, &user.Senha, &user.CreatedAt, &user.UpdatedAt); err != nil {
+	if err := row.Scan(&user.ID, &user.Tipo, &user.Nome, &user.Email, &user.Senha, &user.CreatedAt, &user.UpdatedAt, &user.RemovedAt); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, err
 		} else {

@@ -2,9 +2,11 @@ package usuarios
 
 import (
 	"database/sql"
+
 	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
 	modelData "github.com/Brun0Nasc/Frequencias-Backend/infra/usuarios/model"
 	"github.com/Brun0Nasc/Frequencias-Backend/infra/usuarios/postgres"
+	"github.com/Brun0Nasc/Frequencias-Backend/utils"
 )
 
 type repositorio struct {
@@ -17,7 +19,7 @@ func novoRepo(novoDB *sql.DB) *repositorio {
 	}
 }
 
-func (r *repositorio) NovoUsuario(req *modelApresentacao.ReqUsuario) error {
+func (r *repositorio) NovoUsuario(req *modelApresentacao.Usuario) error {
 	return r.Data.NovoUsuario(&modelData.Usuario{
 		Tipo:  req.Tipo,
 		Nome:  req.Nome,
@@ -26,8 +28,8 @@ func (r *repositorio) NovoUsuario(req *modelApresentacao.ReqUsuario) error {
 	})
 }
 
-func (r *repositorio) ListarUsuarios(order int) ([]modelApresentacao.ReqUsuario, error) {
-	return r.Data.ListarUsuarios(order)
+func (r *repositorio) ListarUsuarios(params *utils.RequestParams) (*modelApresentacao.ListaUsuarios, error) {
+	return r.Data.ListarUsuarios(params)
 }
 
 func (r *repositorio) InativarUsuario(id int) error {

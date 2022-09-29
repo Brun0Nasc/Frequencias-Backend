@@ -4,51 +4,45 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
-	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
 	"github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios"
+	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
+	"github.com/Brun0Nasc/Frequencias-Backend/utils"
+	"github.com/gin-gonic/gin"
 )
 
-func pegaJSON(c *gin.Context) *modelApresentacao.ReqUsuario {
-	var req = modelApresentacao.ReqUsuario{}
+func pegaJSON(c *gin.Context) *modelApresentacao.Usuario {
+	var req = modelApresentacao.Usuario{}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
-			"message":"Could not create. Parameters were not passed correctly",
-			"err":err.Error(),
+			"message": "Could not create. Parameters were not passed correctly",
+			"err":     err.Error(),
 		})
 		return nil
 	}
 	return &req
 }
 
-func novoUsuario(c *gin.Context){
+func novoUsuario(c *gin.Context) {
 	fmt.Println("Adicionando novo usuario")
 
 	req := pegaJSON(c)
 
 	err := usuarios.NovoUsuario(req)
 
-	if err != nil{
-		c.JSON(400, gin.H{"err":err.Error()})
+	if err != nil {
+		c.JSON(400, gin.H{"err": err.Error()})
 		return
 	}
 
-	c.JSON(201, gin.H{"message":"Usuário adicionado com sucesso!"})
+	c.JSON(201, gin.H{"message": "Usuário adicionado com sucesso!"})
 }
 
 func listarUsuarios(c *gin.Context) {
-	fmt.Println("Tentando listar usuarios")
-	order := c.Param("order")
+	params := utils.ParseParams(c)
 
-	intOrder, err := strconv.Atoi(order)
+	res, err := usuarios.ListarUsuarios(params)
 	if err != nil {
-		c.JSON(404, gin.H{"message":"Parâmetro passado de forma incorreta", "err":err.Error()})
-		return
-	}
-
-	res, err := usuarios.ListarUsuarios(intOrder)
-	if err != nil {
-		c.JSON(404, gin.H{"err":err.Error()})
+		c.JSON(404, gin.H{"err": err.Error()})
 		return
 	}
 
@@ -61,15 +55,15 @@ func inativarUsuario(c *gin.Context) {
 
 	intId, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(404, gin.H{"err":err.Error()})
+		c.JSON(404, gin.H{"err": err.Error()})
 		return
 	}
 
 	err = usuarios.InativarUsuario(intId)
 	if err != nil {
-		c.JSON(400, gin.H{"err":err.Error()})
+		c.JSON(400, gin.H{"err": err.Error()})
 		return
 	}
 
-	c.JSON(200, gin.H{"message":"Cadastro inativado com sucesso"})
+	c.JSON(200, gin.H{"message": "Cadastro inativado com sucesso"})
 }
