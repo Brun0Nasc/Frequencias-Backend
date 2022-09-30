@@ -47,6 +47,17 @@ func novoUsuario(c *gin.Context) {
 	c.JSON(201, gin.H{"message": "Usuário adicionado com sucesso!"})
 }
 
+// @Security bearerAuth
+// @Summary GET all people with sort 
+// @Description GET all people with sort orderBy & || order (desc, cresc)
+// @Param		orderBy		query			string				false		"column" 		Enums(id,nome, created_at)
+// @Param		order		query			string				false		"order desc"	
+// @Accept json
+// @Produce json
+// @Success 200 {array} modelApresentacao.ListaUsuarios "OK"
+// @Failure 401,400 {string} string "error"
+// @Tags Usuario
+// @Router /usuarios/list_user [get]
 func listarUsuarios(c *gin.Context) {
 	params := utils.ParseParams(c)
 

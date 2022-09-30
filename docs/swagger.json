@@ -109,6 +109,110 @@
                     }
                 }
             }
+        },
+        "/usuarios/list_user": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "GET all people with sort orderBy \u0026 || order (desc, cresc)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "GET all people with sort",
+                "parameters": [
+                    {
+                        "enum": [
+                            "id",
+                            "nome",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "description": "column",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "order desc",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/usuarios.ListaUsuarios"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "usuarios.ListaUsuarios": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/usuarios.Usuario"
+                    }
+                }
+            }
+        },
+        "usuarios.Usuario": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "removed_at": {
+                    "type": "string"
+                },
+                "senha": {
+                    "type": "string"
+                },
+                "tipo": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
