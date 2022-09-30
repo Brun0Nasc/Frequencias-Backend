@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+	//"os"
 
 	"github.com/Brun0Nasc/Frequencias-Backend/config/server/middlewares"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/login"
@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	//port := os.Getenv("PORT")
 	r := gin.Default()
 	r.Use(middlewares.CORSMiddleware())
 
@@ -19,5 +19,6 @@ func main() {
 	frequencia_usuario.Router(r.Group("frequencia", middlewares.Auth()))
 	login.Router(r.Group("login")) //! nada de middlewares aqui
 
-	r.Run(":" + port)
+	//r.Run(":" + port)
+	r.Run()
 }
