@@ -1,65 +1,46 @@
 package frequencia
 
 import (
-	"fmt"
 	"time"
+
+	"github.com/Brun0Nasc/Frequencias-Backend/config/database"
+	"github.com/Brun0Nasc/Frequencias-Backend/infra/frequencias"
 )
 
 const (
 	// tempoExecucao é a constante responsável por definir o intervalo de tempo de execução da rotina
 	tempoExecucao = time.Second * 10
-	// tipoRotinaMultipla é a constante que identifica a rotina como tipo de execução múltipla
-	tipoRotinaMultipla string = "[rotina_de_multipla_execucao]"
-	// tipoRotinaUnica é a constante que identifica a rotina como tipo de execução única
-	tipoRotinaUnica string = "[rotina_de_execucao_unica]"
 )
 
-// GerarListaFrequencia é responsável por criar o tick de execução da rotina de gerar frequências
-func GerarListaFrequencia() (erro error) {
-	// * Com essa implementação a execução da goroutine é realizada em loop
-	// * Serve para scripts que precisam ficar atualizando dados em tempo real
-	var ticker = time.NewTicker(tempoExecucao)
-	gerarListaFrequencia(tipoRotinaMultipla)
-
-	// Inicializando loop de acordo com o tempo de execução especificado
-	for range ticker.C {
-		gerarListaFrequencia(tipoRotinaMultipla)
-	}
-
-	//! Nesse caso como não está sendo realizada nenhuma execução real
-	//! a variável "erro" não está sendo tratada em momento algum
-	//! mas assim que for implementada a regra de negócio é de extrema importância
-	//! que os erros sejam tratados da melhor forma possível e retornados para a main
-
-	//! O erro não deve ser estourado em caso de falha, pois o mesmo interromperia a execução da rotina principal (a função main)
-	//! Tendo isso em vista o erro deve apenas ser tratado e loggado
-	return
-}
-
-// GerarListaFrequencia2 é responsável por criar uma lista de frequencia em um determinado período
-func GerarListaFrequencia2() (erro error) {
-	// * Com essa implementação a execução da goroutine é realizada
-	// * apenas uma vez dentro do horário especificado [23h - 02h]
+// GerarListaFrequencia é responsável por criar uma lista de frequencia em um determinado período
+func GerarFrequencia() (erro error) {
 	if horarioValido := validarHorarioExecucao(23, 2); horarioValido {
 		var (
 			agora           = time.Now()
 			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day()+1, 0, 0, 0, 0, time.Local)
 		)
 
-		//* Execução da rotina
-		gerarListaFrequencia(tipoRotinaUnica)
+		gerarFrequencia()
 		//* Aguardar a próxima execução da rotina de acordo com o informado na variável proximaExecucao
 		AguardarHorarioExecucao(agora, proximaExecucao)
 		//* Inicializando novamente a rotina após o período de pausa
-		go GerarListaFrequencia2()
+		go GerarFrequencia()
 	}
 
 	return
 }
 
-// gerarListaFrequencia é responsável por toda a regra de negócio para gerar uma lista de frequencia
-func gerarListaFrequencia(tipoRotina string) (erro error) {
-	fmt.Println("Gerando lista de frequência...", tipoRotina)
+// gerarFrequencia é responsável por toda a regra de negócio para gerar uma frequencia
+func gerarFrequencia() (erro error) {
+	db := database.Conectar()
+	defer db.Close()
+	frequenciasRepo := frequencias.NovoRepo(db)
+
+	// Criando uma nova frequência
+	if erro = frequenciasRepo.NovaFrequencia(); erro != nil {
+		return
+	}
+
 	return
 }
 
