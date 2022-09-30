@@ -1,10 +1,13 @@
 package frequencia
 
 import (
+	"errors"
 	"time"
 
 	"github.com/Brun0Nasc/Frequencias-Backend/config/database"
+	domain "github.com/Brun0Nasc/Frequencias-Backend/domain/frequencias/model"
 	"github.com/Brun0Nasc/Frequencias-Backend/infra/frequencias"
+	"github.com/Brun0Nasc/Frequencias-Backend/utils"
 )
 
 const (
@@ -34,7 +37,22 @@ func GerarFrequencia() (erro error) {
 func gerarFrequencia() (erro error) {
 	db := database.Conectar()
 	defer db.Close()
-	frequenciasRepo := frequencias.NovoRepo(db)
+	var (
+		frequenciasRepo  = frequencias.NovoRepo(db)
+		params           = utils.RequestParams{Filters: make(map[string][]string, 0)}
+		listaFrequencias *domain.ListaFrequencias
+	)
+
+	params.AddFilter("existe_frequencia_hoje", "true")
+	// Buscando frequencia criada no dia atual
+	if listaFrequencias, erro = frequenciasRepo.ListarFrequencias(&params); erro != nil {
+		return
+	}
+
+	// Verificando se existe frequencia gerada para o dia atual
+	if len(listaFrequencias.Dados) > 0 {
+		return errors.New("Já foi gerada uma frequência para o dia atual.")
+	}
 
 	// Criando uma nova frequência
 	if erro = frequenciasRepo.NovaFrequencia(); erro != nil {

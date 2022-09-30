@@ -41,3 +41,8 @@ func (p *RequestParams) TemFiltroBool(key string) (bool, bool) {
 
 	return false, false
 }
+
+// AddFilter adiciona um filtro com chave e valores ao params
+func (p *RequestParams) AddFilter(key string, values ...string) {
+	p.Filters[key] = values
+}
