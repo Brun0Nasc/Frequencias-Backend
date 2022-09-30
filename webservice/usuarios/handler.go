@@ -22,6 +22,16 @@ func pegaJSON(c *gin.Context) *modelApresentacao.Usuario {
 	return &req
 }
 
+// @Security bearerAuth
+// @Summary POST a new User
+// @Description POST a new User. For the request to be met, the "nome", "email", "password", are required.
+// @Param		NewUser		body	string		true	"NewUser"
+// @Accept json
+// @Produce json
+// @Success 201  {string} string "OK"
+// @Failure 401,400  {string} string "error"
+// @Tags Usuarios
+// @Router /usuarios [post]
 func novoUsuario(c *gin.Context) {
 	fmt.Println("Adicionando novo usuario")
 

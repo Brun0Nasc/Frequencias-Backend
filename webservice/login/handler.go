@@ -11,6 +11,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Authenticate godoc
+// @Summary Login para usuário
+// @Description Autentica um usuário com as credenciais enviadas e se OK gera um token
+// @ID Authentication
+// @Accept json
+// @Produce json
+// @Param		Login		body	string		true	"Login"
+// @Success 200 {string} string "OK"
+// @Failure 400,500 {string} string "error"
+// @Tags Usuarios
+// @Router /login [post]
 func Login(c *gin.Context) {
 	req := modelApresentacao.Login{}
 	if err := c.BindJSON(&req); err != nil {

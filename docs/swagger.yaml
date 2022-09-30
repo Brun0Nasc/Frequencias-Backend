@@ -6,7 +6,72 @@ info:
   license:
     name: Mozilla Public License 2.0
     url: https://www.mozilla.org/en-US/MPL/2.0/
-paths: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Autentica um usuário com as credenciais enviadas e se OK gera um
+        token
+      operationId: Authentication
+      parameters:
+      - description: Login
+        in: body
+        name: Login
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: Login para usuário
+      tags:
+      - Usuarios
+  /usuarios:
+    post:
+      consumes:
+      - application/json
+      description: POST a new User. For the request to be met, the "nome", "email",
+        "password", are required.
+      parameters:
+      - description: NewUser
+        in: body
+        name: NewUser
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: POST a new User
+      tags:
+      - Usuarios
 securityDefinitions:
   bearerAuth:
     in: header
