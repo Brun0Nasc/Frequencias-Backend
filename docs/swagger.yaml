@@ -1,0 +1,15 @@
+info:
+  contact:
+    email: caiosousafernandesferreira@hotmail.com
+    name: Equipe Komanda
+    url: http://www.swagger.io/support
+  license:
+    name: Mozilla Public License 2.0
+    url: https://www.mozilla.org/en-US/MPL/2.0/
+paths: {}
+securityDefinitions:
+  bearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

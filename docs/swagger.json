@@ -1,0 +1,22 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {
+            "name": "Equipe Komanda",
+            "url": "http://www.swagger.io/support",
+            "email": "caiosousafernandesferreira@hotmail.com"
+        },
+        "license": {
+            "name": "Mozilla Public License 2.0",
+            "url": "https://www.mozilla.org/en-US/MPL/2.0/"
+        }
+    },
+    "paths": {},
+    "securityDefinitions": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
