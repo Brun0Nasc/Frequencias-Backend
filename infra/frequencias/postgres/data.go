@@ -14,15 +14,17 @@ type DBFrequencias struct {
 }
 
 func (pg *DBFrequencias) NovaFrequencia() (err error) {
-	sqlStatement, _, err := sq.
+	sqlStatement, sqlValues, err := sq.
 		Insert("frequencias").
 		Columns("data_atual").
-		Values("current_date").ToSql()
+		Values("NOW()").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
 		return
 	}
 
-	_, err = pg.DB.Exec(sqlStatement)
+	_, err = pg.DB.Exec(sqlStatement, sqlValues...)
 	if err != nil {
 		return err
 	}
@@ -59,18 +61,19 @@ func (pg *DBFrequencias) PegarFrequenciaMaisRecente() (res *int, err error) {
 
 func (pg *DBFrequencias) ListarFrequencias(params *utils.RequestParams) (res *domain.ListaFrequencias, err error) {
 	var (
-		conditions *sq.And
+		conditions = sq.And{}
 		frequencia = domain.Frequencia{}
 	)
+
 	if params.TemFiltro("existe_frequencia_hoje") {
-		*conditions = sq.And{
+		conditions = sq.And{
 			sq.Eq{
-				"FR.data_atual": sq.Expr("NOW()"),
+				"FR.data_atual": "NOW()",
 			},
 		}
 	}
 
-	sqlStatement, _, err := sq.
+	sqlStatement, sqlValues, err := sq.
 		Select("FR.id").
 		From("frequencias FR").
 		Where(conditions).
@@ -81,8 +84,12 @@ func (pg *DBFrequencias) ListarFrequencias(params *utils.RequestParams) (res *do
 		return
 	}
 
-	rows, err := pg.DB.Query(sqlStatement)
+	rows, err := pg.DB.Query(sqlStatement, sqlValues...)
+	if err != nil {
+		return
+	}
 
+	res = &domain.ListaFrequencias{Dados: make([]domain.Frequencia, 0)}
 	for rows.Next() {
 		if err = rows.Scan(&frequencia.ID); err != nil {
 			if err == sql.ErrNoRows {

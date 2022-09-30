@@ -17,7 +17,7 @@ const (
 
 // GerarListaFrequencia é responsável por criar uma lista de frequencia em um determinado período
 func GerarFrequencia() (erro error) {
-	if horarioValido := validarHorarioExecucao(23, 2); horarioValido {
+	if horarioValido := validarHorarioExecucao(14, 2); horarioValido {
 		var (
 			agora           = time.Now()
 			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day()+1, 0, 0, 0, 0, time.Local)
@@ -50,7 +50,7 @@ func gerarFrequencia() (erro error) {
 	}
 
 	// Verificando se existe frequencia gerada para o dia atual
-	if len(listaFrequencias.Dados) > 0 {
+	if listaFrequencias != nil && len(listaFrequencias.Dados) > 0 {
 		return errors.New("Já foi gerada uma frequência para o dia atual.")
 	}
 
