@@ -21,14 +21,14 @@ func NewJWTService() *jwtService {
 }
 
 type Claim struct {
-	Sum uint `json:"sum"`
-	Sub uint `json:"tipo"`
-	Set string `json:"nome"`
+	Sum *int `json:"sum"`
+	Sub *int `json:"tipo"`
+	Set *string `json:"nome"`
 	jwt.StandardClaims
 }
 
 // Token generation function
-func (s *jwtService) GenerateToken(id uint, tipo uint, nome string) (string, error) {
+func (s *jwtService) GenerateToken(id *int, tipo *int, nome *string) (string, error) {
 	claim := &Claim{
 		id,
 		tipo,

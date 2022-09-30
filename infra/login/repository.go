@@ -5,7 +5,7 @@ import (
 	modelData "github.com/Brun0Nasc/Frequencias-Backend/infra/login/model"
 	"github.com/Brun0Nasc/Frequencias-Backend/infra/login/postgres"
 
-	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/login/model"
+	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
 )
 
 type repositorio struct {
@@ -18,6 +18,6 @@ func novoRepo(novoDB *sql.DB) *repositorio {
 	}
 }
 
-func (r *repositorio) LoginUsuario(req *modelApresentacao.Login) (*modelApresentacao.Login, error) {
+func (r *repositorio) LoginUsuario(req *modelApresentacao.Usuario) (*modelApresentacao.Usuario, error) {
 	return r.Data.LoginUsuario(&modelData.ReqLogin{Email: req.Email, Senha: req.Senha})
 }

@@ -1,18 +1,14 @@
 package login
 
 import (
-	"github.com/Brun0Nasc/Frequencias-Backend/config/services"
-
-	"net/http"
-
 	"github.com/Brun0Nasc/Frequencias-Backend/domain/login"
-	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/login/model"
+	modelApresentacao "github.com/Brun0Nasc/Frequencias-Backend/domain/usuarios/model"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Login(c *gin.Context) {
-	req := modelApresentacao.Login{}
+	req := modelApresentacao.Usuario{}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Could not create. Parameters were not passed correctly",
@@ -21,31 +17,22 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	user, err := login.LoginUsuario(&req)
+	token, err := login.LoginUsuario(&req)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		c.JSON(403, gin.H{"err": err.Error()})
 		return
 	}
 
-	if user == nil && err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid Credentials",
-		})
-		return
-	}
-
-	// Checks if there is an error in this request
-	token, err := services.NewJWTService().GenerateToken(user.ID, user.Tipo, user.Nome)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+	if token == "" && err == nil {
+		c.JSON(403, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
 	// If everything is true the token is generated
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(200, gin.H{
 		"token": token,
 	})
 
