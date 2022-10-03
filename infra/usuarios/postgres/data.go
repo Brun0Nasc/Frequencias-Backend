@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -22,7 +23,12 @@ func (postgres *DBUsuarios) NovoUsuario(req *modelData.Usuario) error {
 	(tipo, nome, email, senha) VALUES ($1::INTEGER, $2::VARCHAR(100), 
 	$3::VARCHAR(200), $4::TEXT)`
 
-	_, err := postgres.DB.Exec(sqlStatement, req.Tipo, req.Nome, req.Email, req.Senha)
+	tipo, err := strconv.Atoi(*req.Tipo)
+	if err != nil {
+		return err
+	}
+
+	_, err = postgres.DB.Exec(sqlStatement, tipo, req.Nome, req.Email, req.Senha)
 	if err != nil {
 		return err
 	}

@@ -4,7 +4,7 @@ import "time"
 
 type Usuario struct {
 	ID        *int       `json:"id"`
-	Tipo      *int       `json:"tipo"`
+	Tipo      *string    `json:"tipo"`
 	Nome      *string    `json:"nome"`
 	Email     *string    `json:"email"`
 	Senha     string     `json:"senha"`
@@ -14,5 +14,5 @@ type Usuario struct {
 }
 
 type ListaUsuarios struct {
-	Dados []Usuario `json:"data"` 
+	Dados []Usuario `json:"data"`
 }

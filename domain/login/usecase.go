@@ -31,7 +31,7 @@ func LoginUsuario(req *modelApresentacao.Usuario) (token string, err error) {
 	}
 
 	// Checks if there is an error in this request
-	token, err = services.NewJWTService().GenerateToken(res.ID, res.Tipo, res.Nome)
+	token, err = services.NewJWTService().GenerateToken(res.ID, res.Tipo, &res.Senha, res.Nome)
 
 	return
 }

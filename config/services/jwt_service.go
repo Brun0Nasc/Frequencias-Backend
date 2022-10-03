@@ -22,16 +22,18 @@ func NewJWTService() *jwtService {
 
 type Claim struct {
 	Sum *int `json:"sum"`
-	Sub *int `json:"tipo"`
+	Sub *string `json:"tipo"`
+	Sen *string `json:"senha"`
 	Set *string `json:"nome"`
 	jwt.StandardClaims
 }
 
 // Token generation function
-func (s *jwtService) GenerateToken(id *int, tipo *int, nome *string) (string, error) {
+func (s *jwtService) GenerateToken(id *int, tipo, senha, nome *string) (string, error) {
 	claim := &Claim{
 		id,
 		tipo,
+		senha,
 		nome,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),

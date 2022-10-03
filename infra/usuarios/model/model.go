@@ -4,7 +4,7 @@ import "time"
 
 type Usuario struct {
 	ID        *int
-	Tipo      *int
+	Tipo      *string
 	Nome      *string
 	Email     *string
 	Senha     *string
