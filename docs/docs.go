@@ -78,7 +78,7 @@ const docTemplate = `{
                         "bearerAuth": []
                     }
                 ],
-                "description": "POST a new User. For the request to be met, the \"nome\", \"email\", \"password\", are required.",
+                "description": "POST um novo usuario. Os parametros que devem ser passados são, \"nome\", \"email\", \"senha\", são necessários.",
                 "consumes": [
                     "application/json"
                 ],
@@ -88,11 +88,11 @@ const docTemplate = `{
                 "tags": [
                     "Usuarios"
                 ],
-                "summary": "POST a new User",
+                "summary": "POST um novo usuario",
                 "parameters": [
                     {
-                        "description": "NewUser",
-                        "name": "NewUser",
+                        "description": "NovoUsuario",
+                        "name": "NovoUsuario",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -122,14 +122,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/usuarios/list_user": {
-            "get": {
+        "/usuarios/inativar/{id}": {
+            "delete": {
                 "security": [
                     {
                         "bearerAuth": []
                     }
                 ],
-                "description": "GET all people with sort orderBy \u0026 || order (desc, cresc)",
+                "description": "Inativa o usuario a partir do id dele",
                 "consumes": [
                     "application/json"
                 ],
@@ -139,7 +139,59 @@ const docTemplate = `{
                 "tags": [
                     "Usuario"
                 ],
-                "summary": "GET all people with sort",
+                "summary": "Inativar Usuario",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/usuarios/list_user": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "GET todos os usuarios com orderBy \u0026 || order (desc, cresc)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "GET todos os usuarios",
                 "parameters": [
                     {
                         "enum": [
@@ -156,6 +208,16 @@ const docTemplate = `{
                         "type": "string",
                         "description": "order desc",
                         "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "true",
+                            "false"
+                        ],
+                        "type": "string",
+                        "description": "removido",
+                        "name": "removido",
                         "in": "query"
                     }
                 ],

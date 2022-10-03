@@ -70,12 +70,12 @@ paths:
     post:
       consumes:
       - application/json
-      description: POST a new User. For the request to be met, the "nome", "email",
-        "password", are required.
+      description: POST um novo usuario. Os parametros que devem ser passados são,
+        "nome", "email", "senha", são necessários.
       parameters:
-      - description: NewUser
+      - description: NovoUsuario
         in: body
-        name: NewUser
+        name: NovoUsuario
         required: true
         schema:
           type: string
@@ -96,14 +96,47 @@ paths:
             type: string
       security:
       - bearerAuth: []
-      summary: POST a new User
+      summary: POST um novo usuario
       tags:
       - Usuarios
+  /usuarios/inativar/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Inativa o usuario a partir do id dele
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Inativar Usuario
+      tags:
+      - Usuario
   /usuarios/list_user:
     get:
       consumes:
       - application/json
-      description: GET all people with sort orderBy & || order (desc, cresc)
+      description: GET todos os usuarios com orderBy & || order (desc, cresc)
       parameters:
       - description: column
         enum:
@@ -116,6 +149,13 @@ paths:
       - description: order desc
         in: query
         name: order
+        type: string
+      - description: removido
+        enum:
+        - "true"
+        - "false"
+        in: query
+        name: removido
         type: string
       produces:
       - application/json
@@ -136,7 +176,7 @@ paths:
             type: string
       security:
       - bearerAuth: []
-      summary: GET all people with sort
+      summary: GET todos os usuarios
       tags:
       - Usuario
 securityDefinitions:
