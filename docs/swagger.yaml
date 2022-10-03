@@ -1,0 +1,292 @@
+definitions:
+  frequencia_usuario.ListaUsuarioFrequencia:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/frequencia_usuario.ResFrequenciaUsuario'
+        type: array
+    type: object
+  frequencia_usuario.ResFrequenciaUsuario:
+    properties:
+      data_frequencia:
+        type: string
+      entrada:
+        type: string
+      frequencia_id:
+        type: integer
+      id:
+        type: integer
+      nome:
+        type: string
+      saida:
+        type: string
+      usuario_id:
+        type: integer
+    type: object
+  usuarios.ListaUsuarios:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/usuarios.Usuario'
+        type: array
+    type: object
+  usuarios.Usuario:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      nome:
+        type: string
+      removed_at:
+        type: string
+      senha:
+        type: string
+      tipo:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+info:
+  contact:
+    email: caiosousafernandesferreira@hotmail.com
+    name: Equipe Komanda
+    url: http://www.swagger.io/support
+  license:
+    name: Mozilla Public License 2.0
+    url: https://www.mozilla.org/en-US/MPL/2.0/
+paths:
+  /frequencia:
+    post:
+      consumes:
+      - application/json
+      description: POST um novo usuario. O unico parametro que deve ser passado é
+        o id do usuario em questão
+      parameters:
+      - description: IDUsuario
+        in: body
+        name: IDUsuario
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: POST uma nova frequencia
+      tags:
+      - Frequencias
+  /frequencia/lista:
+    get:
+      consumes:
+      - application/json
+      description: POST um novo usuario. O unico parametro que deve ser passado é
+        o id do usuario em questão
+      parameters:
+      - description: data
+        in: query
+        name: data
+        type: string
+      - description: OrderBy
+        enum:
+        - nome
+        - entrada
+        - saida
+        in: query
+        name: orderBy
+        type: string
+      - description: order
+        enum:
+        - asc
+        - desc
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/frequencia_usuario.ListaUsuarioFrequencia'
+            type: array
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: POST uma nova frequencia
+      tags:
+      - Frequencias
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Autentica um usuário com as credenciais enviadas e se OK gera um
+        token
+      operationId: Authentication
+      parameters:
+      - description: Login
+        in: body
+        name: Login
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: Login para usuário
+      tags:
+      - Usuarios
+  /usuarios:
+    post:
+      consumes:
+      - application/json
+      description: POST um novo usuario. Os parametros que devem ser passados são,
+        "nome", "email", "senha", são necessários.
+      parameters:
+      - description: NovoUsuario
+        in: body
+        name: NovoUsuario
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: POST um novo usuario
+      tags:
+      - Usuarios
+  /usuarios/inativar/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Inativa o usuario a partir do id dele
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Inativar Usuario
+      tags:
+      - Usuarios
+  /usuarios/list_user:
+    get:
+      consumes:
+      - application/json
+      description: GET todos os usuarios com orderBy & || order (desc, cresc)
+      parameters:
+      - description: column
+        enum:
+        - id
+        - nome
+        - created_at
+        in: query
+        name: orderBy
+        type: string
+      - description: order desc
+        in: query
+        name: order
+        type: string
+      - description: removido
+        enum:
+        - "true"
+        - "false"
+        in: query
+        name: removido
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/usuarios.ListaUsuarios'
+            type: array
+        "400":
+          description: error
+          schema:
+            type: string
+        "401":
+          description: error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: GET todos os usuarios
+      tags:
+      - Usuarios
+securityDefinitions:
+  bearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

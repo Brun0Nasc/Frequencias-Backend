@@ -11,17 +11,12 @@ import (
 	"github.com/Brun0Nasc/Frequencias-Backend/utils"
 )
 
-const (
-	// tempoExecucao é a constante responsável por definir o intervalo de tempo de execução da rotina
-	tempoExecucao = time.Second * 10
-)
-
 // GerarListaFrequencia é responsável por criar uma lista de frequencia em um determinado período
 func GerarFrequencia() (erro error) {
-	if horarioValido := validarHorarioExecucao(0, 23); horarioValido {
+	if horarioValido := validarHorarioExecucao(0, 1); horarioValido {
 		var (
 			agora           = time.Now()
-			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day(), 0, 1, 0, 0, time.Local)
+			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day()+1, 0, 0, 0, 0, time.Local)
 		)
 
 		gerarFrequencia()

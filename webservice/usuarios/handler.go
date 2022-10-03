@@ -22,6 +22,16 @@ func pegaJSON(c *gin.Context) *modelApresentacao.Usuario {
 	return &req
 }
 
+// @Security bearerAuth
+// @Summary POST um novo usuario
+// @Description POST um novo usuario. Os parametros que devem ser passados são, "nome", "email", "senha", são necessários.
+// @Param		NovoUsuario		body	string		true	"NovoUsuario"
+// @Accept json
+// @Produce json
+// @Success 201  {string} string "OK"
+// @Failure 401,400  {string} string "error"
+// @Tags Usuarios
+// @Router /usuarios [post]
 func novoUsuario(c *gin.Context) {
 	fmt.Println("Adicionando novo usuario")
 
@@ -37,6 +47,18 @@ func novoUsuario(c *gin.Context) {
 	c.JSON(201, gin.H{"message": "Usuário adicionado com sucesso!"})
 }
 
+// @Security bearerAuth
+// @Summary GET todos os usuarios
+// @Description GET todos os usuarios com orderBy & || order (desc, cresc)
+// @Param		orderBy		query			string				false		"column" 		Enums(id,nome, created_at)
+// @Param		order		query			string				false		"order desc"	
+// @Param		removido	query			string				false		"removido"	Enums(true, false)
+// @Accept json
+// @Produce json
+// @Success 200 {array} modelApresentacao.ListaUsuarios "OK"
+// @Failure 401,400 {string} string "error"
+// @Tags Usuarios
+// @Router /usuarios/list_user [get]
 func listarUsuarios(c *gin.Context) {
 	params := utils.ParseParams(c)
 
@@ -49,6 +71,16 @@ func listarUsuarios(c *gin.Context) {
 	c.JSON(200, res)
 }
 
+// @Security bearerAuth
+// @Summary Inativar Usuario 
+// @Description Inativa o usuario a partir do id dele
+// @Param		id		path	int		true	"id"
+// @Accept json
+// @Produce json
+// @Success 200 {array} string "OK"
+// @Failure 401,400 {string} string "error"
+// @Tags Usuarios
+// @Router /usuarios/inativar/{id} [delete]
 func inativarUsuario(c *gin.Context) {
 	fmt.Println("Tentando inativar usuario")
 	id := c.Param("id")
