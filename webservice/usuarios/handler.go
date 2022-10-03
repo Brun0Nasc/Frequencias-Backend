@@ -57,7 +57,7 @@ func novoUsuario(c *gin.Context) {
 // @Produce json
 // @Success 200 {array} modelApresentacao.ListaUsuarios "OK"
 // @Failure 401,400 {string} string "error"
-// @Tags Usuario
+// @Tags Usuarios
 // @Router /usuarios/list_user [get]
 func listarUsuarios(c *gin.Context) {
 	params := utils.ParseParams(c)
@@ -79,7 +79,7 @@ func listarUsuarios(c *gin.Context) {
 // @Produce json
 // @Success 200 {array} string "OK"
 // @Failure 401,400 {string} string "error"
-// @Tags Usuario
+// @Tags Usuarios
 // @Router /usuarios/inativar/{id} [delete]
 func inativarUsuario(c *gin.Context) {
 	fmt.Println("Tentando inativar usuario")
