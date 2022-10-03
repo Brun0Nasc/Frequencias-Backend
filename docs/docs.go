@@ -24,6 +24,129 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/frequencia": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "POST um novo usuario. O unico parametro que deve ser passado é o id do usuario em questão",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Frequencias"
+                ],
+                "summary": "POST uma nova frequencia",
+                "parameters": [
+                    {
+                        "description": "IDUsuario",
+                        "name": "IDUsuario",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/frequencia/lista": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "POST um novo usuario. O unico parametro que deve ser passado é o id do usuario em questão",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Frequencias"
+                ],
+                "summary": "POST uma nova frequencia",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "data",
+                        "name": "data",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "nome",
+                            "entrada",
+                            "saida"
+                        ],
+                        "type": "string",
+                        "description": "OrderBy",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "description": "order",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/frequencia_usuario.ListaUsuarioFrequencia"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Autentica um usuário com as credenciais enviadas e se OK gera um token",
@@ -137,7 +260,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Usuario"
+                    "Usuarios"
                 ],
                 "summary": "Inativar Usuario",
                 "parameters": [
@@ -189,7 +312,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Usuario"
+                    "Usuarios"
                 ],
                 "summary": "GET todos os usuarios",
                 "parameters": [
@@ -248,6 +371,43 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "frequencia_usuario.ListaUsuarioFrequencia": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/frequencia_usuario.ResFrequenciaUsuario"
+                    }
+                }
+            }
+        },
+        "frequencia_usuario.ResFrequenciaUsuario": {
+            "type": "object",
+            "properties": {
+                "data_frequencia": {
+                    "type": "string"
+                },
+                "entrada": {
+                    "type": "string"
+                },
+                "frequencia_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "saida": {
+                    "type": "string"
+                },
+                "usuario_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "usuarios.ListaUsuarios": {
             "type": "object",
             "properties": {
