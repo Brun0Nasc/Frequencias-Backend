@@ -31,7 +31,7 @@ func NovaFrequenciaUsuario(req *modelApresentacao.ReqFrequenciaUsuario) (err err
 	return
 }
 
-func ListaFrequenciasData(params *utils.RequestParams) (res *modelApresentacao.ListaUsuarioFrequencia, err error){
+func ListaFrequenciasData(params *utils.RequestParams) (res *modelApresentacao.ListaUsuarioFrequencia, err error) {
 	db := database.Conectar()
 	defer db.Close()
 	frequenciaUsuarioRepo := frequencia_usuario.NovoRepo(db)
