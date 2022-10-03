@@ -2,6 +2,7 @@ package frequencia
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/Brun0Nasc/Frequencias-Backend/config/database"
@@ -17,10 +18,10 @@ const (
 
 // GerarListaFrequencia é responsável por criar uma lista de frequencia em um determinado período
 func GerarFrequencia() (erro error) {
-	if horarioValido := validarHorarioExecucao(23, 0); horarioValido {
+	if horarioValido := validarHorarioExecucao(0, 23); horarioValido {
 		var (
 			agora           = time.Now()
-			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day()+1, 0, 0, 0, 0, time.Local)
+			proximaExecucao = time.Date(agora.Year(), agora.Month(), agora.Day(), 0, 1, 0, 0, time.Local)
 		)
 
 		gerarFrequencia()
@@ -59,6 +60,7 @@ func gerarFrequencia() (erro error) {
 		return
 	}
 
+	fmt.Println("Executando")
 	return
 }
 

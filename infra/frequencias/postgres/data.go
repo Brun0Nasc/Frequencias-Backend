@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	domain "github.com/Brun0Nasc/Frequencias-Backend/domain/frequencias/model"
 	"github.com/Brun0Nasc/Frequencias-Backend/utils"
@@ -68,7 +69,7 @@ func (pg *DBFrequencias) ListarFrequencias(params *utils.RequestParams) (res *do
 	if params.TemFiltro("existe_frequencia_hoje") {
 		conditions = sq.And{
 			sq.Eq{
-				"FR.data_atual": "NOW()",
+				"FR.data_atual::DATE": time.Now().Format("2006-01-02"),
 			},
 		}
 	}
