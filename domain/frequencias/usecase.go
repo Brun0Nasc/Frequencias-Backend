@@ -29,7 +29,6 @@ func PegarFrequenciaMaisRecente() (res *int, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("frequencia não listada \nerr:" + err.Error())
 	}
-	
+
 	return
 }
-
