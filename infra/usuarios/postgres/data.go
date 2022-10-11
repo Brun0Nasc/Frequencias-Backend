@@ -40,7 +40,6 @@ func (postgres *DBUsuarios) NovoUsuario(req *modelData.Usuario) error {
 func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApresentacao.ListaUsuarios, err error) {
 	var (
 		ordem, ordenador string
-		removido         bool
 	)
 
 	if params.TemFiltro("order") {
@@ -51,17 +50,18 @@ func (pg *DBUsuarios) ListarUsuarios(params *utils.RequestParams) (res *modelApr
 		ordenador = params.Filters["orderBy"][0]
 	}
 
-	_, removido = params.TemFiltroBool("removido")
-
-	sqlStmt, sqlValues, err := sq.
+	consulta := sq.
 		Select("US.*").
 		From("usuarios US").
-		Where(sq.Eq{
-			"(US.removed_at IS NOT NULL)": removido,
-		}).OrderBy(ordenador + " " + ordem).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
+		OrderBy(ordenador + " " + ordem).
+		PlaceholderFormat(sq.Dollar)
 
+	// Adicionando condições a partir dos filtros
+	utils.TransformFilterInQuery(params, &consulta,
+		utils.BuildFilter("removido", "(FR.removed_at IS NOT NULL)", utils.FlagFilterEq),
+	)
+
+	sqlStmt, sqlValues, err := consulta.ToSql()
 	if err != nil {
 		return nil, err
 	}
