@@ -96,3 +96,8 @@ func BuildFilter(filterName, field string, flag int) (f Filter) {
 
 	return
 }
+
+// AddFilter adiciona um filtro com chave e valores ao params
+func (p *RequestParams) AddFilter(key string, values ...string) {
+	p.Filters[key] = values
+}

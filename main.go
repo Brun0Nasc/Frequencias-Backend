@@ -1,16 +1,18 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/Brun0Nasc/Frequencias-Backend/config/server/middlewares"
+	"github.com/Brun0Nasc/Frequencias-Backend/docs"
+	"github.com/Brun0Nasc/Frequencias-Backend/services/sync"
+	"github.com/Brun0Nasc/Frequencias-Backend/webservice/frequencia_usuario"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/login"
 	"github.com/Brun0Nasc/Frequencias-Backend/webservice/usuarios"
-	"github.com/Brun0Nasc/Frequencias-Backend/webservice/frequencia_usuario"
 	"github.com/gin-gonic/gin"
-	"github.com/Brun0Nasc/Frequencias-Backend/docs"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @contact.name   Equipe Komanda
@@ -39,6 +41,12 @@ func main() {
 	login.Router(r.Group("login")) //! nada de middlewares aqui
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Inicializando rotinas
+	if erro := sync.IniciarRotinas(); erro != nil {
+		log.Fatal(erro)
+	}
+
 	r.Run(":" + port)
 	//r.Run()
 }
